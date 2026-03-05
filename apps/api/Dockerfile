@@ -1,5 +1,5 @@
 # Multi-stage build para optimizar tamaño
-FROM node:18-alpine AS builder
+FROM node:18-slim AS builder
 
 WORKDIR /app
 
@@ -33,12 +33,12 @@ RUN npm run build --workspace=@nexohub/api
 RUN npm prune --omit=dev
 
 # Imagen de producción
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /app
 
-# Instalar OpenSSL 1.1 para compatibilidad con Prisma
-RUN apk add --no-cache openssl1.1-compat
+# Instalar OpenSSL y CA certificates para Prisma
+RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Copiar package files para metadata
 COPY package*.json ./
@@ -58,8 +58,8 @@ COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
 
 # Crear usuario no-root
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nestjs -u 1001
+RUN groupadd -g 1001 nodejs && \
+    useradd -u 1001 -g nodejs nestjs
 USER nestjs
 
 WORKDIR /app/apps/api

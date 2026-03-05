@@ -45,9 +45,8 @@ Thumbs.db
 data/uploads/*
 !data/uploads/.gitkeep
 
-# Prisma
-apps/api/prisma/migrations/*
-!apps/api/prisma/migrations/.gitkeep
+# Prisma - IMPORTANTE: Migraciones DEBEN estar en el repo para deploy
+# apps/api/prisma/migrations/* # DESHABILITADO - necesario para producción
 
 # Test coverage
 coverage
