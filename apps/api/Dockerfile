@@ -17,6 +17,10 @@ COPY . .
 # Build del paquete shared primero (genera types en dist/)
 RUN npm run build --workspace=@nexohub/shared
 
+# Verificar que se generaron los archivos .d.ts (falla temprano si no existen)
+RUN test -f /app/packages/shared/dist/index.d.ts || (echo "ERROR: index.d.ts not generated" && exit 1)
+RUN ls -la /app/packages/shared/dist/
+
 # Generar Prisma Client
 WORKDIR /app/apps/api
 RUN npx prisma generate
