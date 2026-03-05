@@ -37,6 +37,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Instalar OpenSSL 1.1 para compatibilidad con Prisma
+RUN apk add --no-cache openssl1.1-compat
+
 # Copiar package files para metadata
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
@@ -44,6 +47,10 @@ COPY packages/shared/package*.json ./packages/shared/
 
 # Copiar node_modules ya podado desde builder
 COPY --from=builder /app/node_modules ./node_modules
+
+# Copiar Prisma Client generado
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copiar builds y archivos necesarios
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
