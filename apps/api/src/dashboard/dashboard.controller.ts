@@ -1,0 +1,20 @@
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { DashboardService } from './dashboard.service';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+
+@ApiTags('dashboard')
+@Controller('dashboard')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
+export class DashboardController {
+  constructor(private dashboardService: DashboardService) {}
+
+  @Get('stats')
+  @ApiOperation({ summary: 'Get dashboard statistics' })
+  async getStats(@CurrentUser() user: any) {
+    const userPermissions = user.permissions || [];
+    return this.dashboardService.getStats(user.id, userPermissions);
+  }
+}

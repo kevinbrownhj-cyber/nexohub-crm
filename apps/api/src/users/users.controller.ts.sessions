@@ -1,0 +1,70 @@
+// Agregar estos endpoints al UsersController existente
+
+import { Get, Delete, Param } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+
+// Agregar al UsersController:
+
+@Get('sessions')
+@ApiOperation({ summary: 'Get active sessions for current user' })
+@ApiResponse({ status: 200, description: 'List of active sessions' })
+async getSessions(@CurrentUser() user: any) {
+  const sessions = await this.prisma.refreshToken.findMany({
+    where: { 
+      userId: user.id, 
+      revokedAt: null,
+      expiresAt: { gte: new Date() }
+    },
+    select: {
+      id: true,
+      createdAt: true,
+      expiresAt: true,
+      // No devolver el token real por seguridad
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return sessions;
+}
+
+@Delete('sessions/:tokenId')
+@ApiOperation({ summary: 'Revoke a specific session' })
+@ApiResponse({ status: 200, description: 'Session revoked successfully' })
+async revokeSession(
+  @Param('tokenId') tokenId: string,
+  @CurrentUser() user: any,
+) {
+  const result = await this.prisma.refreshToken.updateMany({
+    where: { 
+      id: tokenId, 
+      userId: user.id,
+      revokedAt: null,
+    },
+    data: { revokedAt: new Date() },
+  });
+
+  if (result.count === 0) {
+    throw new NotFoundException('Session not found or already revoked');
+  }
+
+  return { message: 'Session revoked successfully' };
+}
+
+@Delete('sessions')
+@ApiOperation({ summary: 'Revoke all sessions for current user' })
+@ApiResponse({ status: 200, description: 'All sessions revoked successfully' })
+async revokeAllSessions(@CurrentUser() user: any) {
+  const result = await this.prisma.refreshToken.updateMany({
+    where: { 
+      userId: user.id, 
+      revokedAt: null 
+    },
+    data: { revokedAt: new Date() },
+  });
+
+  return { 
+    message: 'All sessions revoked successfully',
+    count: result.count,
+  };
+}

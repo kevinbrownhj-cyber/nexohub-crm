@@ -1,0 +1,35 @@
+node_modules
+dist
+build
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.vscode
+.idea
+
+# Database
+*.db
+*.db-journal
+
+# Uploads
+data/uploads/*
+!data/uploads/.gitkeep
+
+# Prisma
+apps/api/prisma/migrations/*
+!apps/api/prisma/migrations/.gitkeep
+
+# Build outputs
+apps/*/dist
+apps/*/build
+
+# Test coverage
+coverage
+.nyc_output
+
+# Temp files
+*.tmp
+*.temp
+.cache
