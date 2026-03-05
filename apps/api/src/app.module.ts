@@ -15,6 +15,7 @@ import { InsurersModule } from './insurers/insurers.module';
 import { RolesModule } from './roles/roles.module';
 import { CustomersModule } from './customers/customers.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
       },
     }),
     PrismaModule,
+    HealthModule,
     AuthModule,
     UsersModule,
     CustomersModule,

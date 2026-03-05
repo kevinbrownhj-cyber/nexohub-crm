@@ -67,9 +67,9 @@ WORKDIR /app/apps/api
 # Exponer puerto
 EXPOSE 3000
 
-# Health check - usando endpoint /api/roles que existe
+# Health check - endpoint sin autenticación
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s \
-  CMD node -e "require('http').get('http://localhost:3000/api/roles', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Comando de inicio
 CMD ["node", "dist/main.js"]
