@@ -12,8 +12,13 @@ Por lo tanto, las variables de entorno deben usar estos nombres como hostnames.
 
 ## 🔙 Backend (api_crm)
 
+⚠️ **IMPORTANTE:** Verifica los valores reales en tu configuración de EasyPanel:
+- **Usuario de PostgreSQL:** Revisa en el servicio `nexohub_crm` → Credenciales
+- **Nombre de la base de datos:** Revisa en el servicio `nexohub_crm` → Nombre de la base de datos
+- **Contraseña:** Usa la que configuraste al crear el servicio PostgreSQL
+
 ```env
-DATABASE_URL=postgresql://nexohub:cc4d29832e2dc31b500b25f2e9a5fb03@nexohub_crm:5432/crm
+DATABASE_URL=postgresql://USUARIO:CONTRASEÑA@nexohub_crm:5432/NOMBRE_DB
 REDIS_HOST=redis_crm
 REDIS_PORT=6379
 JWT_ACCESS_SECRET=d6e13a5df192c1642542e0eb6cad5b7f180af0a4255829895b1913bd7fd1bda2
@@ -27,7 +32,10 @@ CORS_ORIGIN=https://crm.serviexpressvial.com
 AUDIT_ENABLED=true
 ```
 
-**Nota:** Verifica que el nombre de la base de datos en PostgreSQL sea `crm` (no `nexohub_crm`).
+**Ejemplo con valores del screenshot anterior:**
+```env
+DATABASE_URL=postgresql://nexohub:68bece416d6a797364la@nexohub_crm:5432/crm
+```
 
 ---
 

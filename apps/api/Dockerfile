@@ -8,14 +8,13 @@ COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY packages/shared/package*.json ./packages/shared/
 
-# Instalar dependencias
+# Instalar todas las dependencias
 RUN npm ci
 
 # Copiar código fuente
 COPY . .
 
-# Build del paquete shared primero
-WORKDIR /app
+# Build del paquete shared primero (genera types en dist/)
 RUN npm run build --workspace=@nexohub/shared
 
 # Generar Prisma Client
@@ -26,22 +25,26 @@ RUN npx prisma generate
 WORKDIR /app
 RUN npm run build --workspace=@nexohub/api
 
+# Podar dependencias de desarrollo
+RUN npm prune --omit=dev
+
 # Imagen de producción
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Instalar solo dependencias de producción
+# Copiar package files para metadata
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY packages/shared/package*.json ./packages/shared/
-RUN npm ci --only=production
 
-# Copiar build y archivos necesarios
+# Copiar node_modules ya podado desde builder
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copiar builds y archivos necesarios
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Crear usuario no-root
 RUN addgroup -g 1001 -S nodejs && \
