@@ -21,8 +21,11 @@ RUN npm run build --workspace=@nexohub/shared
 WORKDIR /app/apps/web
 RUN npm run build
 
-# Imagen de producción con Nginx
+# Imagen de producción con Nginx + curl para health check
 FROM nginx:alpine
+
+# Instalar curl para health check
+RUN apk add --no-cache curl
 
 # Copiar build
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
@@ -33,8 +36,8 @@ COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
 # Exponer puerto
 EXPOSE 80
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+# Health check robusto
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost/health || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

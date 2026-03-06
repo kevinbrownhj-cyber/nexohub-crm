@@ -5,6 +5,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 segundos timeout
+  retry: 3, // Reintentar 3 veces
+  retryDelay: 1000, // 1 segundo entre reintentos
 });
 
 api.interceptors.request.use((config) => {
@@ -20,6 +23,17 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // Manejo de timeout y errores de red
+    if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
+      console.error('Network timeout or connection error:', error);
+      // Mostrar notificación al usuario
+      if (typeof window !== 'undefined' && window.showNetworkError) {
+        window.showNetworkError('Connection timeout. Please check your internet.');
+      }
+      return Promise.reject(error);
+    }
+
+    // Manejo de 401 - token expirado
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -41,6 +55,15 @@ api.interceptors.response.use(
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
+    }
+
+    // Manejo de 503 - servicio no disponible
+    if (error.response?.status === 503) {
+      console.error('Service unavailable:', error);
+      if (typeof window !== 'undefined' && window.showServiceUnavailable) {
+        window.showServiceUnavailable('Service temporarily unavailable. Please try again later.');
+      }
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);
