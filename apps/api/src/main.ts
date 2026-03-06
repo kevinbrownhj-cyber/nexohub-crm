@@ -43,8 +43,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   
-  // Montar Swagger usando CDN para assets (evita bug con globalPrefix)
-  SwaggerModule.setup('docs', app, document, {
+  // Aplicar globalPrefix SOLO a las rutas de la API, excluyendo raíz
+  app.setGlobalPrefix('api', {
+    exclude: ['', '(.*)'],
+  });
+
+  // Montar Swagger en raíz
+  SwaggerModule.setup('', app, document, {
     customSiteTitle: 'NexoHub CRM API',
     customCss: '.swagger-ui .topbar { display: none }',
     customCssUrl: 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css',
@@ -57,18 +62,13 @@ async function bootstrap() {
     },
   });
 
-  // Aplicar globalPrefix SOLO a las rutas de la API, excluyendo docs y raíz
-  app.setGlobalPrefix('api', {
-    exclude: ['', 'docs', 'docs/(.*)'],
-  });
-
   const port = process.env.PORT || 3000;
   const logger = new Logger('Bootstrap');
   
   await app.listen(port);
 
   logger.log(`🚀 API running on: http://localhost:${port}/api`);
-  logger.log(`📚 API Docs: http://localhost:${port}/docs`);
+  logger.log(`📚 API Docs: http://localhost:${port}/`);
   logger.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 
   // Shutdown graceful para cerrar conexiones correctamente

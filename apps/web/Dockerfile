@@ -14,7 +14,10 @@ RUN npm ci
 # Copiar código fuente
 COPY . .
 
-# Build de producción
+# Build del paquete shared primero
+RUN npm run build --workspace=@nexohub/shared
+
+# Build de producción del frontend
 WORKDIR /app/apps/web
 RUN npm run build
 

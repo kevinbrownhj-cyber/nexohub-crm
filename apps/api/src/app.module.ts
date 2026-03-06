@@ -16,10 +16,7 @@ import { RolesModule } from './roles/roles.module';
 import { CustomersModule } from './customers/customers.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { HealthModule } from './health/health.module';
-import { AppController } from './app.controller';
-
 @Module({
-  controllers: [AppController],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
