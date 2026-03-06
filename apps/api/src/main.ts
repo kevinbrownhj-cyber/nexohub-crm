@@ -57,9 +57,9 @@ async function bootstrap() {
     },
   });
 
-  // Aplicar globalPrefix SOLO a las rutas de la API, excluyendo docs
+  // Aplicar globalPrefix SOLO a las rutas de la API, excluyendo docs y raíz
   app.setGlobalPrefix('api', {
-    exclude: ['docs', 'docs/(.*)'],
+    exclude: ['', 'docs', 'docs/(.*)'],
   });
 
   const port = process.env.PORT || 3000;
