@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import toast from 'react-hot-toast';
 
 type NotificationType = 'success' | 'error' | 'warning' | 'info';

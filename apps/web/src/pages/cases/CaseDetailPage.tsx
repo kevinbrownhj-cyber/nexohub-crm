@@ -33,7 +33,7 @@ export function CaseDetailPage() {
         <h1 className="text-3xl font-bold text-gray-900">
           Caso {caseData.externalId}
         </h1>
-        <p className="text-gray-600 mt-1">{caseData.insurer.name}</p>
+        <p className="text-gray-600 mt-1">{caseData.insurer?.name || '-'}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -43,7 +43,7 @@ export function CaseDetailPage() {
             <dl className="grid grid-cols-2 gap-4">
               <div>
                 <dt className="text-sm font-medium text-gray-500">Cliente</dt>
-                <dd className="mt-1 text-sm text-gray-900">{caseData.customer.name}</dd>
+                <dd className="mt-1 text-sm text-gray-900">-</dd>
               </div>
               <div>
                 <dt className="text-sm font-medium text-gray-500">Estado</dt>
@@ -101,12 +101,12 @@ export function CaseDetailPage() {
             <dl className="space-y-3">
               <div className="flex justify-between">
                 <dt className="text-sm font-medium text-gray-500">Base</dt>
-                <dd className="text-sm text-gray-900">{formatCurrency(caseData.baseAmount)}</dd>
+                <dd className="text-sm text-gray-900">{formatCurrency(caseData.baseAmount ?? 0)}</dd>
               </div>
               <div className="flex justify-between pt-3 border-t border-gray-200">
                 <dt className="text-sm font-bold text-gray-900">Total</dt>
                 <dd className="text-sm font-bold text-gray-900">
-                  {formatCurrency(caseData.totalAmount)}
+                  {formatCurrency(caseData.totalAmount ?? 0)}
                 </dd>
               </div>
             </dl>
