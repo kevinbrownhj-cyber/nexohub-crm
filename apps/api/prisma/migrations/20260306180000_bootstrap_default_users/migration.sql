@@ -2,39 +2,39 @@
 -- This migration is idempotent via ON CONFLICT / DO NOTHING.
 
 -- Permissions
-INSERT INTO "permissions" ("id", "key", "description", "created_at") VALUES
-  (gen_random_uuid()::text, 'cases.read_all', 'Read all cases', now()),
-  (gen_random_uuid()::text, 'cases.read_assigned', 'Read assigned cases only', now()),
-  (gen_random_uuid()::text, 'cases.create', 'Create new cases', now()),
-  (gen_random_uuid()::text, 'cases.edit', 'Edit cases', now()),
-  (gen_random_uuid()::text, 'cases.manage', 'Manage cases (full access)', now()),
-  (gen_random_uuid()::text, 'cases.soft_delete', 'Soft delete cases', now()),
-  (gen_random_uuid()::text, 'customers.read', 'Read customers', now()),
-  (gen_random_uuid()::text, 'customers.create', 'Create customers', now()),
-  (gen_random_uuid()::text, 'customers.update', 'Update customers', now()),
-  (gen_random_uuid()::text, 'customers.manage', 'Manage customers (full access)', now()),
-  (gen_random_uuid()::text, 'assignments.manage', 'Manage case assignments', now()),
-  (gen_random_uuid()::text, 'surcharges.create', 'Create surcharges', now()),
-  (gen_random_uuid()::text, 'surcharges.approve', 'Approve surcharges', now()),
-  (gen_random_uuid()::text, 'surcharges.reject', 'Reject surcharges', now()),
-  (gen_random_uuid()::text, 'billing.prepare', 'Prepare invoices', now()),
-  (gen_random_uuid()::text, 'billing.issue', 'Issue invoices', now()),
-  (gen_random_uuid()::text, 'billing.export', 'Export invoices', now()),
-  (gen_random_uuid()::text, 'imports.run', 'Run imports', now()),
-  (gen_random_uuid()::text, 'imports.preview', 'Preview imports', now()),
-  (gen_random_uuid()::text, 'imports.rollback', 'Rollback imports', now()),
-  (gen_random_uuid()::text, 'users.manage', 'Manage users', now()),
-  (gen_random_uuid()::text, 'roles.manage', 'Manage roles', now()),
-  (gen_random_uuid()::text, 'audit.read', 'Read audit logs', now())
+INSERT INTO "permissions" ("key", "description", "created_at") VALUES
+  ('cases.read_all', 'Read all cases', now()),
+  ('cases.read_assigned', 'Read assigned cases only', now()),
+  ('cases.create', 'Create new cases', now()),
+  ('cases.edit', 'Edit cases', now()),
+  ('cases.manage', 'Manage cases (full access)', now()),
+  ('cases.soft_delete', 'Soft delete cases', now()),
+  ('customers.read', 'Read customers', now()),
+  ('customers.create', 'Create customers', now()),
+  ('customers.update', 'Update customers', now()),
+  ('customers.manage', 'Manage customers (full access)', now()),
+  ('assignments.manage', 'Manage case assignments', now()),
+  ('surcharges.create', 'Create surcharges', now()),
+  ('surcharges.approve', 'Approve surcharges', now()),
+  ('surcharges.reject', 'Reject surcharges', now()),
+  ('billing.prepare', 'Prepare invoices', now()),
+  ('billing.issue', 'Issue invoices', now()),
+  ('billing.export', 'Export invoices', now()),
+  ('imports.run', 'Run imports', now()),
+  ('imports.preview', 'Preview imports', now()),
+  ('imports.rollback', 'Rollback imports', now()),
+  ('users.manage', 'Manage users', now()),
+  ('roles.manage', 'Manage roles', now()),
+  ('audit.read', 'Read audit logs', now())
 ON CONFLICT ("key") DO NOTHING;
 
 -- Roles
-INSERT INTO "roles" ("id", "key", "name", "description", "created_at", "updated_at") VALUES
-  (gen_random_uuid()::text, 'ADMIN', 'Administrador', 'Acceso completo al sistema', now(), now()),
-  (gen_random_uuid()::text, 'SUPERVISOR_OPERACIONES', 'Supervisor de Operaciones', 'Gestiona casos, asignaciones y validaciones', now(), now()),
-  (gen_random_uuid()::text, 'TECNICO', 'Técnico', 'Trabaja en casos asignados', now(), now()),
-  (gen_random_uuid()::text, 'FACTURACION', 'Facturación', 'Prepara y emite facturas', now(), now()),
-  (gen_random_uuid()::text, 'AUDITOR', 'Auditor', 'Solo lectura y auditoría', now(), now())
+INSERT INTO "roles" ("key", "name", "description", "created_at", "updated_at") VALUES
+  ('ADMIN', 'Administrador', 'Acceso completo al sistema', now(), now()),
+  ('SUPERVISOR_OPERACIONES', 'Supervisor de Operaciones', 'Gestiona casos, asignaciones y validaciones', now(), now()),
+  ('TECNICO', 'Técnico', 'Trabaja en casos asignados', now(), now()),
+  ('FACTURACION', 'Facturación', 'Prepara y emite facturas', now(), now()),
+  ('AUDITOR', 'Auditor', 'Solo lectura y auditoría', now(), now())
 ON CONFLICT ("key") DO NOTHING;
 
 -- Role permissions mapping (idempotent)
@@ -102,12 +102,12 @@ ON CONFLICT ("role_id", "permission_id") DO NOTHING;
 
 -- Users (idempotent by email)
 -- bcrypt hashes generated with bcrypt.hash(password, 10)
-INSERT INTO "users" ("id", "email", "password_hash", "name", "is_active", "created_at", "updated_at") VALUES
-  (gen_random_uuid()::text, 'admin@nexohub.com', '$2b$10$Hol.moWalezS40MPcOsfme4poP6qpNz7J35VYHJrU/ltoKUxKokWa', 'Administrador', true, now(), now()),
-  (gen_random_uuid()::text, 'admin@servivial.com', '$2b$10$Hol.moWalezS40MPcOsfme4poP6qpNz7J35VYHJrU/ltoKUxKokWa', 'Administrador Servivial', true, now(), now()),
-  (gen_random_uuid()::text, 'supervisor@nexohub.com', '$2b$10$X7TU3KEG7L/qPYjYp4joVOmk31R0wDwkhKvZXocbaMkjjVNyg6OM2', 'Supervisor Principal', true, now(), now()),
-  (gen_random_uuid()::text, 'tecnico@nexohub.com', '$2b$10$x5tebGQfeqSuACpWyucRUe5IJvucOPL1k8CqPeaaN8rbP9rK3CsdS', 'Técnico de Campo', true, now(), now()),
-  (gen_random_uuid()::text, 'facturacion@nexohub.com', '$2b$10$tbjDujQSJex43I/z65fb0uOG5WAuESIlz.pEMbVF2hfh/PqNfEAwa', 'Departamento de Facturación', true, now(), now())
+INSERT INTO "users" ("email", "password_hash", "name", "is_active", "created_at", "updated_at") VALUES
+  ('admin@nexohub.com', '$2b$10$Hol.moWalezS40MPcOsfme4poP6qpNz7J35VYHJrU/ltoKUxKokWa', 'Administrador', true, now(), now()),
+  ('admin@servivial.com', '$2b$10$Hol.moWalezS40MPcOsfme4poP6qpNz7J35VYHJrU/ltoKUxKokWa', 'Administrador Servivial', true, now(), now()),
+  ('supervisor@nexohub.com', '$2b$10$X7TU3KEG7L/qPYjYp4joVOmk31R0wDwkhKvZXocbaMkjjVNyg6OM2', 'Supervisor Principal', true, now(), now()),
+  ('tecnico@nexohub.com', '$2b$10$x5tebGQfeqSuACpWyucRUe5IJvucOPL1k8CqPeaaN8rbP9rK3CsdS', 'Técnico de Campo', true, now(), now()),
+  ('facturacion@nexohub.com', '$2b$10$tbjDujQSJex43I/z65fb0uOG5WAuESIlz.pEMbVF2hfh/PqNfEAwa', 'Departamento de Facturación', true, now(), now())
 ON CONFLICT ("email") DO UPDATE SET
   "password_hash" = EXCLUDED."password_hash",
   "is_active" = true,
