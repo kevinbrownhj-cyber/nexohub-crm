@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: nexohub
+      POSTGRES_PASSWORD: nexohub_pw
+      POSTGRES_DB: crm
+    ports:
+      - "55432:5432"
+
+  api:
+    image: nexohub-api:stable
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://nexohub:nexohub_pw@db:5432/crm
+      NODE_ENV: production
+      PORT: 3000
+      API_PREFIX: api
+      JWT_ACCESS_SECRET: test_access_secret_minimum_32_characters_required_here
+      JWT_REFRESH_SECRET: test_refresh_secret_minimum_32_characters_required_here
+      REDIS_HOST: dummy
+      REDIS_PORT: 6379
+      CORS_ORIGIN: http://localhost:5173
+      AUDIT_ENABLED: "true"
+    ports:
+      - "3000:3000"

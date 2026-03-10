@@ -1,0 +1,29 @@
+﻿# Dependencies
+node_modules
+apps/*/node_modules
+
+# Build outputs
+dist
+build
+apps/*/dist
+apps/*/build
+packages/*/dist
+
+# Environment variables
+.env
+.env.*
+apps/api/.env
+apps/web/.env*
+
+# Logs
+*.log
+logs
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Reference folder (no subir)
+reference-crm
