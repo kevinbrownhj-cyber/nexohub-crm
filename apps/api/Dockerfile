@@ -15,7 +15,8 @@ RUN npm ci
 COPY . .
 
 # Build del paquete shared primero (genera types en dist/)
-RUN npm run build --workspace=@nexohub/shared
+RUN test -f /app/packages/shared/package.json
+RUN npm --prefix /app/packages/shared run build
 
 # Verificar que se generaron los archivos .d.ts (falla temprano si no existen)
 RUN test -f /app/packages/shared/dist/index.d.ts || (echo "ERROR: index.d.ts not generated" && exit 1)
@@ -34,7 +35,8 @@ RUN npx prisma generate
 
 # Build de la aplicación API
 WORKDIR /app
-RUN npm run build --workspace=@nexohub/api
+RUN test -f /app/apps/api/package.json
+RUN npm --prefix /app/apps/api run build
 
 # Podar dependencias de desarrollo
 RUN npm prune --omit=dev
