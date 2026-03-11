@@ -334,13 +334,6 @@ async function main() {
   });
 
   console.log('✓ Created default users');
-  console.log('\n📋 Default Credentials:');
-  console.log('  Admin:       admin@nexohub.com / Admin123!');
-  console.log('  Admin:       admin@servivial.com / Admin123!');
-  console.log('  Supervisor:  supervisor@nexohub.com / Super123!');
-  console.log('  Técnico:     tecnico@nexohub.com / Tecnico123!');
-  console.log('  Facturación: facturacion@nexohub.com / Factura123!');
-
   console.log('\n✅ Seed completed successfully!');
 }
 

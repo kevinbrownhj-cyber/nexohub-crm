@@ -43,7 +43,6 @@ async function main() {
   });
 
   console.log(`✅ Admin user ensured: ${email}`);
-  console.log(`🔐 Password set to: ${password}`);
 }
 
 main()

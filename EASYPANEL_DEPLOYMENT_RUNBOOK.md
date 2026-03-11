@@ -34,7 +34,7 @@ Environment Variables:
   JWT_REFRESH_SECRET: [32+ character secret]
   REDIS_HOST: [redis_host]
   REDIS_PORT: 6379
-  CORS_ORIGIN: [frontend_url]
+  CORS_ORIGINS: [frontend_url]
   AUDIT_ENABLED: "true"
 ```
 
@@ -134,7 +134,7 @@ Para reestablecerla manualmente (en container o local):
 ```bash
 $env:ADMIN_EMAIL="serviexpressvial@gmail.com"
 $env:ADMIN_PASSWORD="S3rv!XpressVial#2026"
-npx ts-node apps/api/scripts/set-fixed-password.ts
+npm run admin:fixed
 ```
 
 ### 6. Troubleshooting
