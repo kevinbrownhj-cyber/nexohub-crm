@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Copiar package files
 COPY package*.json ./
+COPY tsconfig.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY packages/shared/package*.json ./packages/shared/
 
@@ -15,6 +16,9 @@ RUN npm ci
 COPY . .
 
 # Build del paquete shared primero (genera types en dist/)
+RUN test -f /app/tsconfig.json
+RUN test -f /app/packages/shared/tsconfig.json
+RUN test -d /app/packages/shared/src
 RUN test -f /app/packages/shared/package.json
 RUN npm --prefix /app/packages/shared run build
 
@@ -51,6 +55,7 @@ RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/
 
 # Copiar package files para metadata
 COPY package*.json ./
+COPY tsconfig.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY packages/shared/package*.json ./packages/shared/
 
